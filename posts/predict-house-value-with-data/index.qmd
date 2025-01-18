@@ -1,0 +1,98 @@
+---
+title: "How Data Science Empowers Smarter Home Buying: Insights from Strathcona county data"
+author: "Yajing Liu"
+date: "2025-01-14"
+categories: ['explanations']
+execute:
+  echo: false
+---
+
+### Introduction
+
+Buying a house is a significant financial purchase in one's life time. However, it is not easy to access a real estate's true value in today's market. This is when Data Science can help - by using Data Analytic skills and predictive modelling, we can help home buyers access the true value of the house they are looking for and provide them guidance on whether the house to price is a reasonable purchase.
+
+In this blog, we explore how we can use Data Science to predict house prices. Using the 2023 Property Tax Assessment dataset from Strathcona County, we demonstrate how attributes like property size and the presence of amenities influence pricing. By the end, you’ll understand how data science can guide smarter home-buying decisions.
+
+### Understanding the Data
+
+In this blog, we are using the 2023 Property Tax Assessment data from Stathcona County which contains those attributes:
+
+Property Size (meters): The size of the house in square meters.
+
+Garage (garage): Whether the house has a garage (Y/N).
+
+Fireplace (firepl): Whether the house has a fireplace (Y/N).
+
+Basement (bsmt): Whether the house has a basement (Y/N).
+
+Building Evaluation (bdevl): Whether the building has been officially evaluated (Y/N).
+
+A typical data science approach starts with validating the data, ensuring there were no missing values, duplicates, or anomalies. During the process, we also utilize visualization to try to find correlation between attributes and the house prices.
+You can find one correlation graph here that demonstrates the connections between attributes and house prices in our dataset.
+![Distribution and relationships of house assessment values (2022), showing scatter plot](distribution_charts.png){#fig-property-assessment-distribution width=80%}
+
+What can you find from this chart? One obvious correlation is that larger homes with amenities like garages and basements consistently showed higher valuations.
+
+### Modeling Approach
+
+For this specific topic, we choose Ridge Regression to create a model from the dataset. It is a type of linear regression that addresses multicollinearity — a situation where attributes are highly correlated. This makes it an excellent choice for predicting house prices where attributes like size and amenities may be interrelated. For example, you would more likely to see a fireplace in a house with larger size. Ridge Regression solves this issue and prevents overfitting, which means the model will likely predict well against new data to produce house price predictions.
+
+### Data Preparation
+
+#### To prepare the data for modeling:
+
+Categorical Features: One-hot encoding was applied to attributes like `garage`, `firepl`, `bsmt`, and `bdevl` to make them suitable for the Ridge model. What does it mean? It means attributes that is either yes or no are converted to a binary format that's easier for the model to process.
+
+Numeric Features: Standard scaling was used to normalize property sizes. This is an additional step we take to make sure the model can work well with the data by making every data aligned together.
+
+Splitting the Data: The dataset was divided into training (70%) and testing (30%) sets. We will use the training data to train the model and the testing data will be repeated tested against the model to see how well it performs.
+
+#### Model training
+
+The model was trained and validated using 5-fold cross-validation, achieving a training score of 0.575 and a test score of 0.564. Those scores are not very high, but good enough that we can use our model to perform some estimates!
+
+### Results and Insights
+
+The model was tested on new data, including features for 10 houses. Below are sample predictions:
+
+#### Sample data for illustration
+
+```{python}
+import pandas as pd
+from IPython.display import Markdown
+
+# Load the data
+results_df = pd.read_csv("ten_houses_predictions.csv")
+
+# Convert the DataFrame to a Markdown table
+table_md = results_df.to_markdown(index=False, tablefmt="pipe")
+
+# Display the full table in Markdown format
+Markdown(table_md)
+```
+
+### Key Takeaways
+
+Property Size Matters: Larger properties are consistently valued higher.
+
+Amenities Add Value: Features like garages and fireplaces positively influence house prices.
+
+Model Limitations: Ridge Regression’s linear nature may not fully capture complex interactions, underscoring the need for future enhancements.
+
+### Limitations and Future Directions
+
+While the Ridge regression model we used provides some insights into the house value problem, we can still improve on it:
+
+Linear Assumptions: The model assumes a linear relationship between attributes and prices, which might oversimplify real-world situation in real estate markets.
+
+Feature Scope: Additional attributes like the number of bedrooms, bathrooms, balcony and proximity to amenities were not included but would influence the house price prediction.
+
+Data Bias: Regional trends and external economic factors were not accounted for.
+
+Overall, the simple model that we trained on the dataset indicates that it is possible to use existing data to predict house values based on its attributes. With future work, it is possible to create a more comprehensive tool for predicting house prices and infer the real value of a house!
+
+### Conclusion
+
+Predictive modeling can be a powerful tool for first-time homebuyers. In this blog post, we showed how publicly available data can estimate house prices, offering transparency and confidence to buyers. As data science tools evolve, so does the ability to make smarter, data-driven decisions in real estate.
+
+If you’re considering buying a house, why not explore how data science can guide your journey? You can start exploring the power of data science and let history data help you making a sound decision!
